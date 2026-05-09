@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import ParticleCanvas from './components/ParticleCanvas';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import About from './components/About';
-import Skills from './components/Skills';
-import Projects from './components/Projects';
-import Resume from './components/Resume';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
+
+const About = lazy(() => import('./components/About'));
+const Skills = lazy(() => import('./components/Skills'));
+const Projects = lazy(() => import('./components/Projects'));
+const Resume = lazy(() => import('./components/Resume'));
+const Contact = lazy(() => import('./components/Contact'));
+const Footer = lazy(() => import('./components/Footer'));
 
 export default function App() {
   const [theme, setTheme] = useState(() => {
@@ -17,7 +18,9 @@ export default function App() {
   });
 
   useEffect(() => {
+    // Apply theme to both html and body elements
     document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 
@@ -25,23 +28,21 @@ export default function App() {
 
   return (
     <div data-theme={theme}>
-      {/* Animated particle background */}
       <ParticleCanvas theme={theme} />
-
-      {/* Navigation */}
       <Navbar theme={theme} toggleTheme={toggleTheme} />
-
-      {/* Main content */}
       <main id="main-content" aria-label="Portfolio content">
         <Hero />
-        <About />
-        <Skills />
-        <Projects />
-        <Resume />
-        <Contact />
+        <Suspense fallback={null}>
+          <About />
+          <Skills />
+          <Projects />
+          <Resume />
+          <Contact />
+        </Suspense>
       </main>
-
-      <Footer />
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
     </div>
   );
 }

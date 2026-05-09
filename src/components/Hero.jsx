@@ -1,5 +1,4 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 
 const STATS = [
   { num: '7+', label: 'Projects' },
@@ -14,19 +13,9 @@ const fadeUp = (delay = 0) => ({
 });
 
 export default function Hero() {
-  const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
-
-  const parallaxY1 = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
-  const parallaxY2 = useTransform(scrollYProgress, [0, 1], ['0%', '25%']);
-  const parallaxY3 = useTransform(scrollYProgress, [0, 1], ['0%', '60%']);
-  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
   return (
     <section
       id="hero"
-      ref={sectionRef}
       style={{
         minHeight: '100vh', display: 'flex', alignItems: 'center',
         justifyContent: 'center', textAlign: 'center',
@@ -41,14 +30,14 @@ export default function Hero() {
         backgroundRepeat: 'repeat', backgroundSize: '128px 128px',
       }} />
 
-      {/* Parallax glows */}
-      <motion.div style={{ position: 'absolute', top: '8%', left: '-12%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,212,255,0.09) 0%, transparent 70%)', pointerEvents: 'none', y: parallaxY1, zIndex: 0 }} />
-      <motion.div style={{ position: 'absolute', top: '30%', right: '-8%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(167,139,250,0.09) 0%, transparent 70%)', pointerEvents: 'none', y: parallaxY2, zIndex: 0 }} />
-      <motion.div style={{ position: 'absolute', bottom: '15%', left: '5%', width: 180, height: 180, border: '1px solid rgba(0,212,255,0.08)', borderRadius: 32, transform: 'rotate(15deg)', pointerEvents: 'none', y: parallaxY3, zIndex: 0 }} />
-      <motion.div style={{ position: 'absolute', top: '20%', right: '8%', width: 100, height: 100, border: '1px solid rgba(167,139,250,0.1)', borderRadius: 20, transform: 'rotate(-20deg)', pointerEvents: 'none', y: parallaxY2, zIndex: 0 }} />
+      {/* PARALLAX EFFECT: Floating glows (CSS animated - GPU accelerated) */}
+      <div className="parallax-glow glow-1" />
+      <div className="parallax-glow glow-2" />
+      <div className="parallax-glow glow-3" />
+      <div className="parallax-glow glow-4" />
 
       {/* Main content */}
-      <motion.div className="container" style={{ y: contentY, opacity, position: 'relative', zIndex: 1 }}>
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
 
         {/* Badge */}
         <motion.div {...fadeUp(0.1)} style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
@@ -59,24 +48,29 @@ export default function Hero() {
             fontFamily: "'JetBrains Mono', monospace", fontSize: '0.76rem',
             color: 'var(--cyan2)', letterSpacing: '0.07em',
           }}>
-            <motion.span
-              animate={{ boxShadow: ['0 0 4px #00f5c8, 0 0 8px #00f5c8', '0 0 8px #00f5c8, 0 0 20px #00f5c8, 0 0 30px rgba(0,245,200,0.4)', '0 0 4px #00f5c8, 0 0 8px #00f5c8'] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ width: 8, height: 8, borderRadius: '50%', background: '#00f5c8', flexShrink: 0, display: 'inline-block' }}
-            />
+            <span style={{
+              width: 8, height: 8, borderRadius: '50%', background: '#00f5c8',
+              flexShrink: 0, display: 'inline-block',
+            }} />
             Cloud Architect &amp; DevOps Engineer
           </div>
         </motion.div>
 
-        {/* Avatar */}
+        {/* Avatar - FIXED: Changed from profile.jpeg to profile.webp */}
         <motion.div {...fadeUp(0.15)} style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.8rem' }}>
           <div style={{
             width: 118, height: 118, borderRadius: '50%', padding: 3,
             background: 'linear-gradient(135deg, var(--cyan), var(--purple))',
             boxShadow: '0 0 40px rgba(0,212,255,0.3), 0 0 80px rgba(0,212,255,0.1)', flexShrink: 0,
           }}>
-            <img src="/profile.jpeg" alt="Lahari Sri Kotipalli" loading="eager"
-              style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
+            <img
+              src="/profile.webp"
+              alt="Lahari Sri Kotipalli"
+              loading="eager"
+              fetchPriority="high"
+              width={112}
+              height={112}
+              style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', display: 'block' }}
             />
           </div>
         </motion.div>
@@ -125,41 +119,25 @@ export default function Hero() {
         {/* Stats Bar */}
         <motion.div {...fadeUp(0.35)} style={{ display: 'flex', justifyContent: 'center' }}>
           <div style={{
-            display: 'flex', gap: 0,
-            borderRadius: 12,
+            display: 'flex', gap: 0, borderRadius: 12,
             background: 'rgba(6,11,20,0.7)',
             border: '1px solid rgba(0,245,255,0.15)',
-            backdropFilter: 'blur(12px)',
-            overflow: 'hidden',
+            backdropFilter: 'blur(12px)', overflow: 'hidden',
             boxShadow: '0 0 20px rgba(0,245,255,0.05)',
           }}>
             {STATS.map((s, i) => (
               <div key={i} style={{
-                textAlign: 'center',
-                padding: '0.8rem 2.2rem',
+                textAlign: 'center', padding: '0.8rem 2.2rem',
                 borderRight: i < STATS.length - 1 ? '1px solid rgba(0,245,255,0.1)' : 'none',
                 position: 'relative',
               }}>
                 <div style={{
                   position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-                  background: i === 0
-                    ? 'linear-gradient(90deg, #00f5ff, #00f5c8)'
-                    : i === 1
-                    ? 'linear-gradient(90deg, #a78bfa, #f472b6)'
-                    : 'linear-gradient(90deg, #f472b6, #00f5ff)',
+                  background: i === 0 ? 'linear-gradient(90deg, #00f5ff, #00f5c8)' : i === 1 ? 'linear-gradient(90deg, #a78bfa, #f472b6)' : 'linear-gradient(90deg, #f472b6, #00f5ff)',
                   opacity: 0.7,
                 }} />
-                <div style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '0.58rem', color: 'rgba(0,245,255,0.4)',
-                  letterSpacing: '0.12em', textTransform: 'uppercase',
-                  marginBottom: 6,
-                }}>{s.label}</div>
-                <div style={{
-                  fontFamily: "'Syne', sans-serif", fontSize: '1.9rem',
-                  fontWeight: 800, color: '#00f5ff', lineHeight: 1,
-                  textShadow: '0 0 16px rgba(0,245,255,0.35)',
-                }}>{s.num}</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.58rem', color: 'rgba(0,245,255,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 6 }}>{s.label}</div>
+                <div style={{ fontFamily: "'Syne', sans-serif", fontSize: '1.9rem', fontWeight: 800, color: '#00f5ff', lineHeight: 1, textShadow: '0 0 16px rgba(0,245,255,0.35)' }}>{s.num}</div>
               </div>
             ))}
           </div>
@@ -172,15 +150,7 @@ export default function Hero() {
           transition={{ delay: 1.4, duration: 1 }}
           style={{ marginTop: '3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}
         >
-          <span style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '0.6rem',
-            color: 'rgba(0,245,255,0.25)',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-          }}>
-            scroll
-          </span>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem', color: 'rgba(0,245,255,0.25)', letterSpacing: '0.18em', textTransform: 'uppercase' }}>scroll</span>
           <motion.svg
             animate={{ y: [0, 7, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
@@ -190,11 +160,78 @@ export default function Hero() {
             <polyline points="6 9 12 15 18 9" />
           </motion.svg>
         </motion.div>
-
-      </motion.div>
+      </div>
 
       <style>{`
-        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.85); } }
+        /* PARALLAX EFFECT: Floating animated glows */
+        .parallax-glow {
+          position: absolute;
+          border-radius: 50%;
+          pointer-events: none;
+          will-change: transform;
+          z-index: 0;
+        }
+        .glow-1 {
+          top: 8%;
+          left: -12%;
+          width: 500px;
+          height: 500px;
+          background: radial-gradient(circle, rgba(0,212,255,0.09) 0%, transparent 70%);
+          animation: floatGlow1 20s ease-in-out infinite;
+        }
+        .glow-2 {
+          top: 30%;
+          right: -8%;
+          width: 400px;
+          height: 400px;
+          background: radial-gradient(circle, rgba(167,139,250,0.09) 0%, transparent 70%);
+          animation: floatGlow2 25s ease-in-out infinite;
+        }
+        .glow-3 {
+          bottom: 15%;
+          left: 5%;
+          width: 180px;
+          height: 180px;
+          border: 1px solid rgba(0,212,255,0.08);
+          border-radius: 32px;
+          transform: rotate(15deg);
+          animation: floatBorder 18s ease-in-out infinite;
+        }
+        .glow-4 {
+          top: 20%;
+          right: 8%;
+          width: 100px;
+          height: 100px;
+          border: 1px solid rgba(167,139,250,0.1);
+          border-radius: 20px;
+          transform: rotate(-20deg);
+          animation: floatBorder2 22s ease-in-out infinite;
+        }
+        
+        @keyframes floatGlow1 {
+          0%, 100% { transform: translate(0px, 0px) scale(1); }
+          50% { transform: translate(25px, -20px) scale(1.05); }
+        }
+        @keyframes floatGlow2 {
+          0%, 100% { transform: translate(0px, 0px) scale(1); }
+          50% { transform: translate(-20px, 15px) scale(1.08); }
+        }
+        @keyframes floatBorder {
+          0%, 100% { transform: rotate(15deg) translate(0px, 0px); }
+          50% { transform: rotate(20deg) translate(-10px, -8px); }
+        }
+        @keyframes floatBorder2 {
+          0%, 100% { transform: rotate(-20deg) translate(0px, 0px); }
+          50% { transform: rotate(-25deg) translate(12px, 8px); }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+          .parallax-glow { animation: none !important; }
+        }
+        @media (max-width: 768px) {
+          .glow-1, .glow-2 { opacity: 0.4; }
+          .glow-3, .glow-4 { opacity: 0.3; }
+        }
       `}</style>
     </section>
   );

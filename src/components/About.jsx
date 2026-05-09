@@ -37,7 +37,7 @@ export default function About() {
           style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.6fr)', gap: '4rem', alignItems: 'center' }}
           className="about-grid"
         >
-          {/* Left – Photo */}
+          {/* Left – Photo - FIXED: Changed from profile.jpeg to profile.webp */}
           <motion.div {...slideLeft(0.1)} style={{ position: 'relative' }}>
             <div style={{
               width: '100%', aspectRatio: '4/5', maxHeight: 430,
@@ -45,7 +45,7 @@ export default function About() {
               boxShadow: 'var(--shadow-card)', border: '1px solid var(--border)',
             }}>
               <img
-                src="/profile.jpeg"
+                src="/profile.webp"
                 alt="Lahari Sri Kotipalli — Cloud and DevOps Engineer"
                 loading="lazy"
                 width="400"

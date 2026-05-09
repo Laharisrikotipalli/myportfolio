@@ -8,7 +8,6 @@ export default function ParticleCanvas({ theme }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Respect prefers-reduced-motion — skip animation entirely
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
       canvas.style.display = 'none';
@@ -24,13 +23,13 @@ export default function ParticleCanvas({ theme }) {
     };
     resize();
 
-    const N = isDark ? 85 : 60;
+    // Reduced particle count for better performance
+    const N = isDark ? 40 : 25;
     const particles = [];
 
     const pastelColors = [
       'rgba(173,216,230,', 'rgba(176,224,230,', 'rgba(221,160,221,',
-      'rgba(255,182,193,', 'rgba(152,251,152,', 'rgba(255,218,185,',
-      'rgba(230,230,250,', 'rgba(200,200,255,',
+      'rgba(255,182,193,', 'rgba(152,251,152,', 'rgba(230,230,250,',
     ];
 
     for (let i = 0; i < N; i++) {
@@ -59,18 +58,28 @@ export default function ParticleCanvas({ theme }) {
       }
     }
 
-    const draw = () => {
+    // Throttle to 24fps for better performance
+    const INTERVAL = 1000 / 24;
+    let lastTime = 0;
+    let isMobile = canvas.width <= 768;
+
+    const draw = (timestamp) => {
+      animRef.current = requestAnimationFrame(draw);
+      if (timestamp - lastTime < INTERVAL) return;
+      lastTime = timestamp;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      if (isDark) {
+      // Skip connection lines on mobile
+      if (isDark && !isMobile) {
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
             const dx = particles[i].x - particles[j].x;
             const dy = particles[i].y - particles[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 130) {
+            const distSq = dx * dx + dy * dy;
+            if (distSq < 16900) {
               ctx.beginPath();
-              ctx.strokeStyle = `rgba(0,212,255,${0.055 * (1 - dist / 130)})`;
+              ctx.strokeStyle = `rgba(0,212,255,${0.055 * (1 - Math.sqrt(distSq) / 130)})`;
               ctx.lineWidth = 0.5;
               ctx.moveTo(particles[i].x, particles[i].y);
               ctx.lineTo(particles[j].x, particles[j].y);
@@ -105,15 +114,15 @@ export default function ParticleCanvas({ theme }) {
           ctx.fill();
         }
       });
-
-      animRef.current = requestAnimationFrame(draw);
     };
 
-    draw();
+    animRef.current = requestAnimationFrame(draw);
 
-    const handleResize = () => resize();
+    const handleResize = () => {
+      resize();
+      isMobile = canvas.width <= 768;
+    };
     window.addEventListener('resize', handleResize);
-
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current);
       window.removeEventListener('resize', handleResize);

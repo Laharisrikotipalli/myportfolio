@@ -62,10 +62,14 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.4, 0, 0.2, 1] } },
 };
 
+// Memoised so it isn't re-declared on every ProjectCard render
 function GithubIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+    <svg
+      width="15" height="15" viewBox="0 0 24 24" fill="currentColor"
+      aria-hidden="true" focusable="false"
+    >
+      <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
     </svg>
   );
 }
@@ -77,7 +81,13 @@ function ImpactText({ parts }) {
         typeof part === 'string' ? (
           <span key={i}>{part}</span>
         ) : (
-          <span key={i} style={{ color: 'var(--cyan)', fontWeight: 700, fontFamily: "'JetBrains Mono', monospace", fontSize: '0.82rem' }}>
+          <span
+            key={i}
+            style={{
+              color: 'var(--cyan)', fontWeight: 700,
+              fontFamily: "'JetBrains Mono', monospace", fontSize: '0.82rem',
+            }}
+          >
             {part.stat}
           </span>
         )
@@ -88,7 +98,7 @@ function ImpactText({ parts }) {
 
 function ProjectCard({ proj, index }) {
   return (
-    <motion.div
+    <motion.article              // <-- article is more semantic than div for a card
       variants={cardVariants}
       style={{
         borderRadius: 18,
@@ -100,14 +110,21 @@ function ProjectCard({ proj, index }) {
         position: 'relative',
       }}
       whileHover={{ y: -6, transition: { duration: 0.22 } }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--border-hover)'; e.currentTarget.style.boxShadow = 'var(--shadow-hover)'; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'var(--shadow-card)'; }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = 'var(--border-hover)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-hover)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = 'var(--border)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-card)';
+      }}
     >
       {/* Top accent line */}
-      <div style={{ height: 3, background: proj.accentColor }} />
+      <div aria-hidden="true" style={{ height: 3, background: proj.accentColor }} />
 
       {/* Scan line animation */}
       <motion.div
+        aria-hidden="true"
         animate={{ y: ['-100%', '800%'] }}
         transition={{ duration: 5 + index * 0.5, repeat: Infinity, ease: 'linear', repeatDelay: 3 }}
         style={{
@@ -121,12 +138,15 @@ function ProjectCard({ proj, index }) {
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-          <div style={{
-            width: 46, height: 46, borderRadius: 12, flexShrink: 0,
-            background: 'var(--bg3)', border: '1px solid var(--border)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '1.4rem',
-          }}>
+          <div
+            aria-hidden="true"
+            style={{
+              width: 46, height: 46, borderRadius: 12, flexShrink: 0,
+              background: 'var(--bg3)', border: '1px solid var(--border)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '1.4rem',
+            }}
+          >
             {proj.icon}
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
@@ -136,15 +156,24 @@ function ProjectCard({ proj, index }) {
             }}>
               {proj.num}
             </div>
-            <div style={{
+            <h3 style={{
               fontFamily: "'Syne', sans-serif", fontWeight: 700,
               fontSize: '1.05rem', lineHeight: 1.25, color: 'var(--text)',
+              margin: 0,
             }}>
               {proj.title}
-            </div>
+            </h3>
           </div>
           {/* HUD corner accent */}
-          <div style={{ width: 18, height: 18, borderTop: '1.5px solid rgba(0,245,255,0.25)', borderRight: '1.5px solid rgba(0,245,255,0.25)', flexShrink: 0, marginTop: 2 }} />
+          <div
+            aria-hidden="true"
+            style={{
+              width: 18, height: 18,
+              borderTop: '1.5px solid rgba(0,245,255,0.25)',
+              borderRight: '1.5px solid rgba(0,245,255,0.25)',
+              flexShrink: 0, marginTop: 2,
+            }}
+          />
         </div>
 
         {/* Problem / Solution / Impact */}
@@ -190,11 +219,13 @@ function ProjectCard({ proj, index }) {
           >
             <GithubIcon /> GitHub
           </a>
+
           {proj.demo && (
             <a
               href={proj.demo}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={`Watch demo for ${proj.title}`}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 padding: '7px 14px', borderRadius: 8,
@@ -206,15 +237,19 @@ function ProjectCard({ proj, index }) {
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,212,255,0.14)'; e.currentTarget.style.borderColor = 'var(--cyan)'; }}
               onMouseLeave={e => { e.currentTarget.style.background = 'rgba(0,212,255,0.07)'; e.currentTarget.style.borderColor = 'rgba(0,212,255,0.25)'; }}
             >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                <polygon points="5 3 19 12 5 21 5 3"/>
+              <svg
+                width="13" height="13" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" strokeWidth="2.2"
+                aria-hidden="true" focusable="false"
+              >
+                <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
               Live Demo
             </a>
           )}
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }
 
@@ -226,8 +261,22 @@ export default function Projects() {
 
   return (
     <section id="projects" className="section-pad-alt" ref={sectionRef} style={{ position: 'relative', overflow: 'hidden' }}>
-      <motion.div style={{ position: 'absolute', top: '5%', left: '-10%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%)', pointerEvents: 'none', y: parallaxY1, zIndex: 0 }} />
-      <motion.div style={{ position: 'absolute', bottom: '10%', right: '-8%', width: 350, height: 350, borderRadius: '50%', background: 'radial-gradient(circle, rgba(167,139,250,0.06) 0%, transparent 70%)', pointerEvents: 'none', y: parallaxY2, zIndex: 0 }} />
+      <motion.div
+        aria-hidden="true"
+        style={{
+          position: 'absolute', top: '5%', left: '-10%', width: 400, height: 400,
+          borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%)',
+          pointerEvents: 'none', y: parallaxY1, zIndex: 0,
+        }}
+      />
+      <motion.div
+        aria-hidden="true"
+        style={{
+          position: 'absolute', bottom: '10%', right: '-8%', width: 350, height: 350,
+          borderRadius: '50%', background: 'radial-gradient(circle, rgba(167,139,250,0.06) 0%, transparent 70%)',
+          pointerEvents: 'none', y: parallaxY2, zIndex: 0,
+        }}
+      />
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <motion.div
@@ -260,7 +309,13 @@ export default function Projects() {
           viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.3 }}
           style={{ textAlign: 'center', marginTop: '3.5rem' }}
         >
-          <a href="https://github.com/Laharisrikotipalli" target="_blank" rel="noopener noreferrer" className="btn-outline">
+          <a
+            href="https://github.com/Laharisrikotipalli"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-outline"
+            aria-label="View all projects on GitHub"
+          >
             <GithubIcon />
             View All Projects on GitHub
           </a>
