@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://myportfolio-1m2e-cc6ioh0vi-laharisrikotipallis-projects.vercel.app/sitemap.xml
