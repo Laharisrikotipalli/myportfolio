@@ -8,8 +8,10 @@ export default function ParticleCanvas({ theme }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // Disable on mobile entirely — biggest single perf win
+    const isMobile = window.innerWidth <= 768;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) {
+    if (prefersReduced || isMobile) {
       canvas.style.display = 'none';
       return;
     }
@@ -23,8 +25,7 @@ export default function ParticleCanvas({ theme }) {
     };
     resize();
 
-    // Reduced particle count for better performance
-    const N = isDark ? 40 : 25;
+    const N = isDark ? 30 : 18;
     const particles = [];
 
     const pastelColors = [
@@ -37,20 +38,20 @@ export default function ParticleCanvas({ theme }) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          r: Math.random() * 1.6 + 0.3,
-          vx: (Math.random() - 0.5) * 0.28,
-          vy: (Math.random() - 0.5) * 0.28,
-          alpha: Math.random() * 0.65 + 0.1,
+          r: Math.random() * 1.4 + 0.3,
+          vx: (Math.random() - 0.5) * 0.22,
+          vy: (Math.random() - 0.5) * 0.22,
+          alpha: Math.random() * 0.55 + 0.1,
           color: Math.random() > 0.65 ? '0,245,200' : '0,212,255',
         });
       } else {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          r: Math.random() * 28 + 8,
-          vx: (Math.random() - 0.5) * 0.35,
-          vy: (Math.random() - 0.5) * 0.35,
-          alpha: Math.random() * 0.32 + 0.08,
+          r: Math.random() * 24 + 6,
+          vx: (Math.random() - 0.5) * 0.28,
+          vy: (Math.random() - 0.5) * 0.28,
+          alpha: Math.random() * 0.28 + 0.06,
           color: pastelColors[Math.floor(Math.random() * pastelColors.length)],
           pulse: Math.random() * Math.PI * 2,
           pastel: true,
@@ -58,10 +59,9 @@ export default function ParticleCanvas({ theme }) {
       }
     }
 
-    // Throttle to 24fps for better performance
-    const INTERVAL = 1000 / 24;
+    // Throttle to 20fps on desktop
+    const INTERVAL = 1000 / 20;
     let lastTime = 0;
-    let isMobile = canvas.width <= 768;
 
     const draw = (timestamp) => {
       animRef.current = requestAnimationFrame(draw);
@@ -70,25 +70,7 @@ export default function ParticleCanvas({ theme }) {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Skip connection lines on mobile
-      if (isDark && !isMobile) {
-        for (let i = 0; i < particles.length; i++) {
-          for (let j = i + 1; j < particles.length; j++) {
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
-            const distSq = dx * dx + dy * dy;
-            if (distSq < 16900) {
-              ctx.beginPath();
-              ctx.strokeStyle = `rgba(0,212,255,${0.055 * (1 - Math.sqrt(distSq) / 130)})`;
-              ctx.lineWidth = 0.5;
-              ctx.moveTo(particles[i].x, particles[i].y);
-              ctx.lineTo(particles[j].x, particles[j].y);
-              ctx.stroke();
-            }
-          }
-        }
-      }
-
+      // Skip connection lines (expensive O(n²))
       particles.forEach(p => {
         p.x += p.vx;
         p.y += p.vy;
@@ -98,7 +80,7 @@ export default function ParticleCanvas({ theme }) {
         if (p.y > canvas.height + 60) p.y = -60;
 
         if (p.pastel) {
-          p.pulse += 0.009;
+          p.pulse += 0.007;
           const a = p.alpha * (0.8 + 0.2 * Math.sin(p.pulse));
           const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
           grad.addColorStop(0, p.color + a + ')');
@@ -118,11 +100,8 @@ export default function ParticleCanvas({ theme }) {
 
     animRef.current = requestAnimationFrame(draw);
 
-    const handleResize = () => {
-      resize();
-      isMobile = canvas.width <= 768;
-    };
-    window.addEventListener('resize', handleResize);
+    const handleResize = () => resize();
+    window.addEventListener('resize', handleResize, { passive: true });
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current);
       window.removeEventListener('resize', handleResize);

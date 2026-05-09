@@ -1,5 +1,4 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
 /* ── Google Cloud Icon ── */
 const GCPIcon = () => (
@@ -325,13 +324,13 @@ const DLQIcon = () => (
 /* ── Focus dot for highlighted skills ── */
 function FocusDot() {
   return (
-    <motion.span
-      animate={{ opacity: [1, 0.3, 1], scale: [1, 0.75, 1] }}
-      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+    <span
+      className="focus-dot"
       style={{
         display: 'inline-block', width: 5, height: 5, borderRadius: '50%',
         background: '#00f5c8', marginLeft: 5, verticalAlign: 'middle',
         boxShadow: '0 0 6px #00f5c8', flexShrink: 0,
+        animation: 'focusPulse 2s ease-in-out infinite',
       }}
     />
   );
@@ -437,10 +436,8 @@ function Marquee() {
     }}>
       <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 80, background: 'linear-gradient(90deg, var(--bg, #060b14), transparent)', zIndex: 2, pointerEvents: 'none' }} />
       <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 80, background: 'linear-gradient(270deg, var(--bg, #060b14), transparent)', zIndex: 2, pointerEvents: 'none' }} />
-      <motion.div
-        animate={{ x: ['0%', '-50%'] }}
-        transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
-        style={{ display: 'flex', gap: '2.5rem', width: 'max-content', alignItems: 'center' }}
+      <div
+        style={{ display: 'flex', gap: '2.5rem', width: 'max-content', alignItems: 'center', animation: 'marqueeScroll 28s linear infinite' }}
       >
         {doubled.map((item, i) => (
           <div key={i} style={{
@@ -454,7 +451,7 @@ function Marquee() {
             <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.62rem', color: 'var(--text3)', letterSpacing: '0.06em' }}>{item.label}</span>
           </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }
@@ -482,20 +479,24 @@ function IconBadge({ icon, label }) {
   );
 }
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.55, ease: [0.4, 0, 0.2, 1], delay: i * 0.08 },
-  }),
-};
-
 export default function Skills() {
   const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
-  const parallaxY1 = useTransform(scrollYProgress, [0, 1], ['0%', '-20%']);
-  const parallaxY2 = useTransform(scrollYProgress, [0, 1], ['0%', '-35%']);
-  const parallaxY3 = useTransform(scrollYProgress, [0, 1], ['0%', '-10%']);
+  const headerRef = useRef(null);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const els = sectionRef.current?.querySelectorAll('.reveal-item');
+    els?.forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
 
   return (
     <section id="skills" className="section-pad" ref={sectionRef} style={{ position: 'relative', overflow: 'hidden' }}>
@@ -505,34 +506,30 @@ export default function Skills() {
         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M 48 0 L 0 0 0 48' fill='none' stroke='%2300f5ff' stroke-width='0.5'/%3E%3C/svg%3E")`,
         backgroundSize: '48px 48px',
       }} />
-      {/* Parallax orbs */}
-      <motion.div style={{ position: 'absolute', top: '10%', right: '-8%', width: 420, height: 420, borderRadius: '50%', background: 'radial-gradient(circle, rgba(167,139,250,0.07) 0%, transparent 70%)', pointerEvents: 'none', y: parallaxY1, zIndex: 0 }} />
-      <motion.div style={{ position: 'absolute', bottom: '15%', left: '-6%', width: 350, height: 350, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%)', pointerEvents: 'none', y: parallaxY2, zIndex: 0 }} />
-      <motion.div style={{ position: 'absolute', top: '45%', left: '10%', width: 120, height: 120, border: '1px solid rgba(0,245,200,0.07)', borderRadius: 24, transform: 'rotate(20deg)', pointerEvents: 'none', y: parallaxY3, zIndex: 0 }} />
-      <motion.div style={{ position: 'absolute', top: '20%', right: '15%', width: 70, height: 70, border: '1px solid rgba(244,114,182,0.09)', borderRadius: 14, transform: 'rotate(-30deg)', pointerEvents: 'none', y: parallaxY1, zIndex: 0 }} />
+      {/* Static decorative orbs (no scroll parallax on mobile) */}
+      <div style={{ position: 'absolute', top: '10%', right: '-8%', width: 420, height: 420, borderRadius: '50%', background: 'radial-gradient(circle, rgba(167,139,250,0.07) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'absolute', bottom: '15%', left: '-6%', width: 350, height: 350, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'absolute', top: '45%', left: '10%', width: 120, height: 120, border: '1px solid rgba(0,245,200,0.07)', borderRadius: 24, transform: 'rotate(20deg)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'absolute', top: '20%', right: '15%', width: 70, height: 70, border: '1px solid rgba(244,114,182,0.09)', borderRadius: 14, transform: 'rotate(-30deg)', pointerEvents: 'none', zIndex: 0 }} />
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        <motion.div
-          initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.6 }}
-        >
+        <div ref={headerRef} className="reveal-item">
           <div className="section-eyebrow">My Toolkit</div>
           <h2 className="section-title">Technical <span className="accent">Skills</span></h2>
           <div className="section-bar" />
-        </motion.div>
+        </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.4rem' }} className="skills-grid">
           {SKILLS.map((skill, i) => (
-            <motion.div
-              key={skill.cat} custom={i} variants={cardVariants}
-              initial="hidden" whileInView="visible"
-              viewport={{ once: true, amount: 0.1 }}
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
+            <div
+              key={skill.cat}
+              className="reveal-item skill-card"
               style={{
+                transitionDelay: `${i * 0.07}s`,
                 padding: '1.8rem', borderRadius: 16,
                 background: 'var(--card)', border: '1px solid var(--border)',
                 boxShadow: 'var(--shadow-card)', cursor: 'default',
-                transition: 'border-color 0.2s, box-shadow 0.2s',
+                transition: 'opacity 0.5s ease, transform 0.5s ease, border-color 0.2s, box-shadow 0.2s',
               }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--border-hover)'; e.currentTarget.style.boxShadow = 'var(--shadow-hover)'; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.boxShadow = 'var(--shadow-card)'; }}
@@ -544,15 +541,24 @@ export default function Skills() {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 {skill.items.map(item => <IconBadge key={item.label} icon={item.icon} label={item.label} />)}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         <Marquee />
       </div>
       <style>{`
+        .reveal-item { opacity: 0; transform: translateY(24px); }
+        .reveal-visible { opacity: 1; transform: translateY(0); transition: opacity 0.6s ease, transform 0.6s ease; }
+        @keyframes focusPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.75); } }
+        @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @media (max-width: 900px) { .skills-grid { grid-template-columns: repeat(2,1fr) !important; } }
         @media (max-width: 560px) { .skills-grid { grid-template-columns: 1fr !important; } }
+        @media (prefers-reduced-motion: reduce) {
+          .reveal-item { opacity: 1; transform: none; }
+          .focus-dot { animation: none !important; }
+          [style*="marqueeScroll"] { animation: none !important; }
+        }
       `}</style>
     </section>
   );

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 const STATS = [
   { num: '7+', label: 'Projects' },
@@ -6,13 +6,15 @@ const STATS = [
   { num: '8.2', label: 'CGPA' },
 ];
 
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 28 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.65, ease: [0.4, 0, 0.2, 1], delay },
-});
-
 export default function Hero() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    // Small delay lets browser paint first — improves FCP/LCP
+    const t = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(t);
+  }, []);
+
   return (
     <section
       id="hero"
@@ -23,24 +25,16 @@ export default function Hero() {
         position: 'relative', zIndex: 1, overflow: 'hidden',
       }}
     >
-      {/* Film grain overlay */}
-      <div style={{
-        position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none', opacity: 0.018,
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-        backgroundRepeat: 'repeat', backgroundSize: '128px 128px',
-      }} />
-
-      {/* PARALLAX EFFECT: Floating glows (CSS animated - GPU accelerated) */}
+      {/* Floating glows — CSS only, GPU-composited */}
       <div className="parallax-glow glow-1" />
       <div className="parallax-glow glow-2" />
       <div className="parallax-glow glow-3" />
       <div className="parallax-glow glow-4" />
 
-      {/* Main content */}
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
 
         {/* Badge */}
-        <motion.div {...fadeUp(0.1)} style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
+        <div className={`hero-item ${visible ? 'hero-visible' : ''}`} style={{ transitionDelay: '0.05s', display: 'flex', justifyContent: 'center', marginBottom: '2rem' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 10,
             padding: '8px 20px', borderRadius: 100,
@@ -54,10 +48,10 @@ export default function Hero() {
             }} />
             Cloud Architect &amp; DevOps Engineer
           </div>
-        </motion.div>
+        </div>
 
-        {/* Avatar - FIXED: Changed from profile.jpeg to profile.webp */}
-        <motion.div {...fadeUp(0.15)} style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.8rem' }}>
+        {/* Avatar */}
+        <div className={`hero-item ${visible ? 'hero-visible' : ''}`} style={{ transitionDelay: '0.1s', display: 'flex', justifyContent: 'center', marginBottom: '1.8rem' }}>
           <div style={{
             width: 118, height: 118, borderRadius: '50%', padding: 3,
             background: 'linear-gradient(135deg, var(--cyan), var(--purple))',
@@ -68,15 +62,17 @@ export default function Hero() {
               alt="Lahari Sri Kotipalli"
               loading="eager"
               fetchPriority="high"
+              decoding="async"
               width={112}
               height={112}
               style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', display: 'block' }}
             />
           </div>
-        </motion.div>
+        </div>
 
         {/* Name */}
-        <motion.h1 {...fadeUp(0.2)} style={{
+        <h1 className={`hero-item ${visible ? 'hero-visible' : ''}`} style={{
+          transitionDelay: '0.15s',
           fontFamily: "'Syne', sans-serif", fontSize: 'clamp(2.8rem, 7vw, 5.8rem)',
           fontWeight: 800, lineHeight: 0.95, marginBottom: '1.6rem', letterSpacing: '-0.03em',
         }}>
@@ -86,10 +82,11 @@ export default function Hero() {
             background: 'linear-gradient(135deg, var(--cyan) 0%, var(--purple) 60%, var(--pink) 100%)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
           }}>Sri Kotipalli</span>
-        </motion.h1>
+        </h1>
 
         {/* Bio */}
-        <motion.p {...fadeUp(0.25)} style={{
+        <p className={`hero-item ${visible ? 'hero-visible' : ''}`} style={{
+          transitionDelay: '0.2s',
           fontSize: '1.05rem', color: 'var(--text2)',
           maxWidth: 540, margin: '0 auto 2.8rem', lineHeight: 1.8,
         }}>
@@ -97,10 +94,10 @@ export default function Hero() {
           and the evolution of{' '}
           <span style={{ color: '#00f5ff', fontWeight: 500 }}>DevOps</span> at{' '}
           <span style={{ color: 'var(--purple)', fontWeight: 500 }}>scale</span>.
-        </motion.p>
+        </p>
 
         {/* CTA Buttons */}
-        <motion.div {...fadeUp(0.3)} style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '3.2rem' }}>
+        <div className={`hero-item ${visible ? 'hero-visible' : ''}`} style={{ transitionDelay: '0.25s', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '3.2rem' }}>
           <a href="#projects" className="btn-primary">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             View My Work
@@ -114,10 +111,10 @@ export default function Hero() {
             </svg>
             View Resume
           </a>
-        </motion.div>
+        </div>
 
         {/* Stats Bar */}
-        <motion.div {...fadeUp(0.35)} style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className={`hero-item ${visible ? 'hero-visible' : ''}`} style={{ transitionDelay: '0.3s', display: 'flex', justifyContent: 'center' }}>
           <div style={{
             display: 'flex', gap: 0, borderRadius: 12,
             background: 'rgba(6,11,20,0.7)',
@@ -141,29 +138,33 @@ export default function Hero() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.4, duration: 1 }}
-          style={{ marginTop: '3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}
+        <div
+          style={{ marginTop: '3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, opacity: visible ? 1 : 0, transition: 'opacity 1s ease 1.2s' }}
         >
           <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem', color: 'rgba(0,245,255,0.25)', letterSpacing: '0.18em', textTransform: 'uppercase' }}>scroll</span>
-          <motion.svg
-            animate={{ y: [0, 7, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          <svg
+            className="scroll-bounce"
             width="16" height="16" viewBox="0 0 24 24" fill="none"
             stroke="rgba(0,245,255,0.35)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
           >
             <polyline points="6 9 12 15 18 9" />
-          </motion.svg>
-        </motion.div>
+          </svg>
+        </div>
       </div>
 
       <style>{`
-        /* PARALLAX EFFECT: Floating animated glows */
+        .hero-item {
+          opacity: 0;
+          transform: translateY(22px);
+          transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .hero-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
         .parallax-glow {
           position: absolute;
           border-radius: 50%;
@@ -172,42 +173,33 @@ export default function Hero() {
           z-index: 0;
         }
         .glow-1 {
-          top: 8%;
-          left: -12%;
-          width: 500px;
-          height: 500px;
+          top: 8%; left: -12%;
+          width: 500px; height: 500px;
           background: radial-gradient(circle, rgba(0,212,255,0.09) 0%, transparent 70%);
           animation: floatGlow1 20s ease-in-out infinite;
         }
         .glow-2 {
-          top: 30%;
-          right: -8%;
-          width: 400px;
-          height: 400px;
+          top: 30%; right: -8%;
+          width: 400px; height: 400px;
           background: radial-gradient(circle, rgba(167,139,250,0.09) 0%, transparent 70%);
           animation: floatGlow2 25s ease-in-out infinite;
         }
         .glow-3 {
-          bottom: 15%;
-          left: 5%;
-          width: 180px;
-          height: 180px;
+          bottom: 15%; left: 5%;
+          width: 180px; height: 180px;
           border: 1px solid rgba(0,212,255,0.08);
           border-radius: 32px;
           transform: rotate(15deg);
           animation: floatBorder 18s ease-in-out infinite;
         }
         .glow-4 {
-          top: 20%;
-          right: 8%;
-          width: 100px;
-          height: 100px;
+          top: 20%; right: 8%;
+          width: 100px; height: 100px;
           border: 1px solid rgba(167,139,250,0.1);
           border-radius: 20px;
           transform: rotate(-20deg);
           animation: floatBorder2 22s ease-in-out infinite;
         }
-        
         @keyframes floatGlow1 {
           0%, 100% { transform: translate(0px, 0px) scale(1); }
           50% { transform: translate(25px, -20px) scale(1.05); }
@@ -224,9 +216,15 @@ export default function Hero() {
           0%, 100% { transform: rotate(-20deg) translate(0px, 0px); }
           50% { transform: rotate(-25deg) translate(12px, 8px); }
         }
-        
+        @keyframes scrollBounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(7px); }
+        }
+        .scroll-bounce { animation: scrollBounce 1.5s ease-in-out infinite; }
         @media (prefers-reduced-motion: reduce) {
           .parallax-glow { animation: none !important; }
+          .hero-item { transition: none !important; }
+          .scroll-bounce { animation: none !important; }
         }
         @media (max-width: 768px) {
           .glow-1, .glow-2 { opacity: 0.4; }
