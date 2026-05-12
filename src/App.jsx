@@ -3,25 +3,27 @@ import ParticleCanvas from './components/ParticleCanvas';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 
-const About = lazy(() => import('./components/About'));
-const Skills = lazy(() => import('./components/Skills'));
+// Lazy-load below-fold sections
+const About    = lazy(() => import('./components/About'));
+const Skills   = lazy(() => import('./components/Skills'));
 const Projects = lazy(() => import('./components/Projects'));
-const Resume = lazy(() => import('./components/Resume'));
-const Contact = lazy(() => import('./components/Contact'));
-const Footer = lazy(() => import('./components/Footer'));
+const Resume   = lazy(() => import('./components/Resume'));
+const Contact  = lazy(() => import('./components/Contact'));
+const Footer   = lazy(() => import('./components/Footer'));
 
 export default function App() {
   const [theme, setTheme] = useState(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved) return saved;
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved) return saved;
+    } catch {}
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
 
   useEffect(() => {
-    // Apply theme to both html and body elements
     document.documentElement.setAttribute('data-theme', theme);
     document.body.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    try { localStorage.setItem('theme', theme); } catch {}
   }, [theme]);
 
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');

@@ -2,13 +2,13 @@ import { useEffect, useRef } from 'react';
 
 export default function ParticleCanvas({ theme }) {
   const canvasRef = useRef(null);
-  const animRef = useRef(null);
+  const animRef   = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Disable on mobile entirely — biggest single perf win
+    // Kill on mobile and reduced-motion — biggest single perf win
     const isMobile = window.innerWidth <= 768;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced || isMobile) {
@@ -16,16 +16,17 @@ export default function ParticleCanvas({ theme }) {
       return;
     }
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
     const isDark = theme !== 'light';
 
     const resize = () => {
-      canvas.width = window.innerWidth;
+      canvas.width  = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     resize();
 
-    const N = isDark ? 30 : 18;
+    // Reduced particle counts — was 30/18
+    const N = isDark ? 20 : 12;
     const particles = [];
 
     const pastelColors = [
@@ -39,19 +40,19 @@ export default function ParticleCanvas({ theme }) {
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           r: Math.random() * 1.4 + 0.3,
-          vx: (Math.random() - 0.5) * 0.22,
-          vy: (Math.random() - 0.5) * 0.22,
-          alpha: Math.random() * 0.55 + 0.1,
+          vx: (Math.random() - 0.5) * 0.18,
+          vy: (Math.random() - 0.5) * 0.18,
+          alpha: Math.random() * 0.45 + 0.08,
           color: Math.random() > 0.65 ? '0,245,200' : '0,212,255',
         });
       } else {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          r: Math.random() * 24 + 6,
-          vx: (Math.random() - 0.5) * 0.28,
-          vy: (Math.random() - 0.5) * 0.28,
-          alpha: Math.random() * 0.28 + 0.06,
+          r: Math.random() * 20 + 5,
+          vx: (Math.random() - 0.5) * 0.22,
+          vy: (Math.random() - 0.5) * 0.22,
+          alpha: Math.random() * 0.22 + 0.05,
           color: pastelColors[Math.floor(Math.random() * pastelColors.length)],
           pulse: Math.random() * Math.PI * 2,
           pastel: true,
@@ -59,19 +60,19 @@ export default function ParticleCanvas({ theme }) {
       }
     }
 
-    // Throttle to 20fps on desktop
-    const INTERVAL = 1000 / 20;
+    // Throttle to 15fps — saves ~25% vs 20fps, imperceptible for ambient particles
+    const INTERVAL = 1000 / 15;
     let lastTime = 0;
 
-    const draw = (timestamp) => {
+    const draw = (ts) => {
       animRef.current = requestAnimationFrame(draw);
-      if (timestamp - lastTime < INTERVAL) return;
-      lastTime = timestamp;
+      if (ts - lastTime < INTERVAL) return;
+      lastTime = ts;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Skip connection lines (expensive O(n²))
-      particles.forEach(p => {
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
         if (p.x < -60) p.x = canvas.width + 60;
@@ -80,7 +81,7 @@ export default function ParticleCanvas({ theme }) {
         if (p.y > canvas.height + 60) p.y = -60;
 
         if (p.pastel) {
-          p.pulse += 0.007;
+          p.pulse += 0.006;
           const a = p.alpha * (0.8 + 0.2 * Math.sin(p.pulse));
           const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
           grad.addColorStop(0, p.color + a + ')');
@@ -95,7 +96,7 @@ export default function ParticleCanvas({ theme }) {
           ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
           ctx.fill();
         }
-      });
+      }
     };
 
     animRef.current = requestAnimationFrame(draw);
@@ -112,11 +113,9 @@ export default function ParticleCanvas({ theme }) {
     <canvas
       ref={canvasRef}
       id="bg-canvas"
+      aria-hidden="true"
       style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 0,
-        pointerEvents: 'none',
+        position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none',
         opacity: theme === 'light' ? 0.65 : 1,
       }}
     />
