@@ -136,11 +136,11 @@ const CERTS = [
   },
   {
     icon: <APSSDCIcon />,
-    name: 'AWS Cloud Computing & DevOps Virtual Internship',
+    name: 'Cloud Computing Virtual Internship',
     issuer: 'APSSDC',
     color: '#FF6B35',
     link: 'https://drive.google.com/file/d/1daZzTIgm0kFj8eZq5-oiF781F955kfsf/view?usp=sharing',
-    category: 'DevOps',
+    category: 'Cloud',
   },
 ];
 
