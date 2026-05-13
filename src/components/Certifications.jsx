@@ -50,54 +50,30 @@ function useCertReveal(delay = 0) {
   return ref;
 }
 
-/* ── Inline brand icons ── */
+/* ── Inline brand icons — real logos ── */
+const iconStyle = { width: '100%', height: '100%', objectFit: 'contain', display: 'block', mixBlendMode: 'multiply' };
+
 const GoogleCloudIcon = () => (
-  <svg viewBox="0 0 24 24" width="26" height="26" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="gcpG2" x1="0" y1="7" x2="21" y2="18" gradientUnits="userSpaceOnUse">
-        <stop offset="0%"   stopColor="#4285F4"/>
-        <stop offset="35%"  stopColor="#EA4335"/>
-        <stop offset="70%"  stopColor="#FBBC05"/>
-        <stop offset="100%" stopColor="#34A853"/>
-      </linearGradient>
-    </defs>
-    <path d="M18 10.5c-.5-2.5-2.7-4.5-5.3-4.5C11 6 9.5 6.7 8.4 7.7 7.6 7.3 6.8 7 6 7c-2.2 0-4 1.8-4 4 0 .2 0 .4.1.5C.8 12 0 13.1 0 14.4 0 16.4 1.6 18 3.6 18H18c1.7 0 3-1.3 3-3 0-1.5-1.1-2.8-2.5-3" fill="url(#gcpG2)" transform="translate(0.5 0)"/>
-  </svg>
+  <img src="https://www.gstatic.com/devrel-devsite/prod/v45f61267e7d8ea156d456d7de73e7a48e13316d2085d73a0a76fef3f5fd7b028/cloud/images/favicons/onecloud/super_cloud.png" alt="Google Cloud" style={iconStyle} />
 );
 
 const IBMIcon = () => (
-  <svg viewBox="0 0 48 20" width="38" height="16" xmlns="http://www.w3.org/2000/svg">
-    <text x="2" y="16" fontSize="18" fontWeight="900" fill="#1F70C1" fontFamily="Arial Black, Arial" letterSpacing="-1">IBM</text>
-    <rect x="2" y="4"  width="44" height="2.5" fill="white" opacity="0.5"/>
-    <rect x="2" y="9"  width="44" height="2.5" fill="white" opacity="0.5"/>
-    <rect x="2" y="14" width="44" height="2.5" fill="white" opacity="0.5"/>
-  </svg>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" style={{ ...iconStyle, mixBlendMode: 'normal' }} />
 );
 
 const OracleIcon = () => (
-  <svg viewBox="0 0 70 20" width="54" height="16" xmlns="http://www.w3.org/2000/svg">
-    <text x="2" y="15" fontSize="13" fontWeight="900" fill="#F80000" fontFamily="Arial Black, Arial" letterSpacing="0.3">ORACLE</text>
-  </svg>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/5/50/Oracle_logo.svg" alt="Oracle" style={{ ...iconStyle, mixBlendMode: 'normal' }} />
 );
 
 const CiscoIcon = () => (
-  <svg viewBox="0 0 60 28" width="46" height="18" xmlns="http://www.w3.org/2000/svg">
-    <rect x="26" y="2"  width="8" height="14" rx="4" fill="#00BCEB"/>
-    <rect x="18" y="5"  width="6" height="11" rx="3" fill="#00BCEB"/>
-    <rect x="36" y="5"  width="6" height="11" rx="3" fill="#00BCEB"/>
-    <rect x="10" y="9"  width="6" height="7"  rx="3" fill="#00BCEB"/>
-    <rect x="44" y="9"  width="6" height="7"  rx="3" fill="#00BCEB"/>
-    <rect x="3"  y="12" width="5" height="4"  rx="2" fill="#00BCEB"/>
-    <rect x="52" y="12" width="5" height="4"  rx="2" fill="#00BCEB"/>
-    <text x="30" y="27" fontSize="7" fontWeight="700" fill="#00BCEB" fontFamily="Arial" textAnchor="middle" letterSpacing="1.5">CISCO</text>
-  </svg>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/64/Cisco_logo.svg" alt="Cisco" style={{ ...iconStyle, mixBlendMode: 'normal' }} />
 );
 
 const APSSDCIcon = () => (
-  <svg viewBox="0 0 48 48" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="24" cy="24" r="22" fill="none" stroke="#FF6B35" strokeWidth="2"/>
-    <text x="24" y="21" fontSize="9" fontWeight="900" fill="#FF6B35" fontFamily="Arial Black" textAnchor="middle">AP</text>
-    <text x="24" y="32" fontSize="6.5" fontWeight="700" fill="#FF6B35" fontFamily="Arial" textAnchor="middle">SSDC</text>
+  <svg viewBox="0 0 80 40" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <rect width="80" height="40" rx="6" fill="#FF6B35"/>
+    <text x="40" y="15" fontSize="9" fontWeight="900" fill="white" fontFamily="Arial Black, Arial" textAnchor="middle" letterSpacing="0.5">APSSDC</text>
+    <text x="40" y="30" fontSize="6" fontWeight="600" fill="rgba(255,255,255,0.85)" fontFamily="Arial" textAnchor="middle" letterSpacing="0.3">INTERNSHIP</text>
   </svg>
 );
 
