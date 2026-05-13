@@ -6,7 +6,7 @@ const STATS = [
   { num: '8.2', label: 'CGPA' },
 ];
 
-// Scroll-based parallax — GPU only (transform), RAF-throttled
+// Scroll-based parallax — GPU only, disabled on mobile to boost TTI
 function useScrollParallax(speed = 0.12) {
   const ref = useRef(null);
   const rafRef = useRef(null);
@@ -14,12 +14,12 @@ function useScrollParallax(speed = 0.12) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Skip on mobile and reduced-motion — major perf win
     if (window.innerWidth <= 768) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const update = () => {
-      const scrollY = window.scrollY;
-      el.style.transform = `translateY(${scrollY * speed}px)`;
+      el.style.transform = `translateY(${window.scrollY * speed}px)`;
     };
 
     const onScroll = () => {
@@ -43,14 +43,14 @@ function useScrollParallax(speed = 0.12) {
 
 export default function Hero() {
   const [visible, setVisible] = useState(false);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
-  // Depth layer refs — each moves at a different scroll speed (floating Z-depth illusion)
-  const layer1Ref = useScrollParallax(-0.08);  // slowest — far back
-  const layer2Ref = useScrollParallax(-0.14);  // mid
-  const layer3Ref = useScrollParallax(-0.22);  // faster — closer
-  const layer4Ref = useScrollParallax(-0.30);  // fastest — foreground feel
-  const badgeRef  = useScrollParallax(-0.05);  // badge drifts very gently
-  const bioRef    = useScrollParallax(-0.10);  // bio slightly faster
+  const layer1Ref = useScrollParallax(-0.08);
+  const layer2Ref = useScrollParallax(-0.14);
+  const layer3Ref = useScrollParallax(-0.22);
+  const layer4Ref = useScrollParallax(-0.30);
+  const badgeRef  = useScrollParallax(-0.05);
+  const bioRef    = useScrollParallax(-0.10);
 
   useEffect(() => {
     const t = requestAnimationFrame(() => setVisible(true));
@@ -67,41 +67,29 @@ export default function Hero() {
         position: 'relative', zIndex: 1, overflow: 'hidden',
       }}
     >
-      {/* ── Floating depth layers (Effect 1) ──
-          Each glow moves at a different scroll speed, creating a Z-depth illusion.
-          All use transform only → GPU composited, zero layout impact.           */}
-
-      {/* Layer 1 — far back, slowest */}
+      {/* Depth layers — hidden on mobile via CSS to avoid paint cost */}
       <div ref={layer1Ref} className="parallax-layer" style={{
         top: '8%', left: '-12%', width: 520, height: 520,
         background: 'radial-gradient(circle, rgba(0,212,255,0.09) 0%, transparent 70%)',
         willChange: 'transform',
       }} />
-
-      {/* Layer 2 — mid depth */}
       <div ref={layer2Ref} className="parallax-layer" style={{
         top: '30%', right: '-8%', width: 420, height: 420,
         background: 'radial-gradient(circle, rgba(167,139,250,0.09) 0%, transparent 70%)',
         willChange: 'transform',
       }} />
-
-      {/* Layer 3 — near, geometric border box */}
       <div ref={layer3Ref} className="parallax-layer parallax-border" style={{
         bottom: '15%', left: '5%', width: 180, height: 180,
         border: '1px solid rgba(0,212,255,0.1)',
         borderRadius: 32, rotate: '15deg',
         willChange: 'transform',
       }} />
-
-      {/* Layer 4 — foreground, small accent box */}
       <div ref={layer4Ref} className="parallax-layer parallax-border" style={{
         top: '20%', right: '8%', width: 100, height: 100,
         border: '1px solid rgba(167,139,250,0.12)',
         borderRadius: 20, rotate: '-20deg',
         willChange: 'transform',
       }} />
-
-      {/* Extra depth accent — bottom right glow */}
       <div ref={useScrollParallax(-0.06)} className="parallax-layer" style={{
         bottom: '10%', right: '5%', width: 280, height: 280,
         background: 'radial-gradient(circle, rgba(244,114,182,0.07) 0%, transparent 70%)',
@@ -110,7 +98,7 @@ export default function Hero() {
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
 
-        {/* Badge — scroll parallax (Effect 2: content layers at different speeds) */}
+        {/* Badge */}
         <div
           ref={badgeRef}
           className={`hero-item ${visible ? 'hero-visible' : ''}`}
@@ -132,11 +120,13 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Avatar */}
+        {/* Avatar — explicit dimensions prevent CLS */}
         <div className={`hero-item ${visible ? 'hero-visible' : ''}`}
           style={{ transitionDelay: '0.1s', display: 'flex', justifyContent: 'center', marginBottom: '1.8rem' }}>
           <div style={{
-            width: 118, height: 118, borderRadius: '50%', padding: 3,
+            width: 124, height: 124,
+            flexShrink: 0,
+            borderRadius: '50%', padding: 3,
             background: 'linear-gradient(135deg, var(--cyan), var(--purple))',
             boxShadow: '0 0 40px rgba(0,212,255,0.3), 0 0 80px rgba(0,212,255,0.1)',
           }}>
@@ -146,7 +136,8 @@ export default function Hero() {
               loading="eager"
               fetchpriority="high"
               decoding="async"
-              width={112} height={112}
+              width={118}
+              height={118}
               style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover', display: 'block' }}
             />
           </div>
@@ -166,7 +157,7 @@ export default function Hero() {
           }}>Sri Kotipalli</span>
         </h1>
 
-        {/* Bio — slightly faster scroll than heading = depth separation */}
+        {/* Bio */}
         <p
           ref={bioRef}
           className={`hero-item ${visible ? 'hero-visible' : ''}`}
@@ -241,29 +232,24 @@ export default function Hero() {
       </div>
 
       <style>{`
-        /* Hero entrance */
         .hero-item { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
         .hero-visible { opacity: 1; transform: translateY(0); }
 
-        /* Parallax layer base — position:absolute, pointer-events:none */
         .parallax-layer {
           position: absolute;
           border-radius: 50%;
           pointer-events: none;
           will-change: transform;
           z-index: 0;
-          /* Floating ambient animation layered ON TOP of scroll parallax */
           animation: floatAmbient 20s ease-in-out infinite;
         }
         .parallax-border { border-radius: 20px; background: transparent; }
 
-        /* Subtle ambient float — purely CSS, composited */
         @keyframes floatAmbient {
           0%,100% { margin-top: 0px; }
           50%      { margin-top: -14px; }
         }
 
-        /* Each layer gets a different animation phase for organic feel */
         .parallax-layer:nth-child(1) { animation-duration: 20s; animation-delay: 0s; }
         .parallax-layer:nth-child(2) { animation-duration: 25s; animation-delay: -8s; }
         .parallax-layer:nth-child(3) { animation-duration: 18s; animation-delay: -4s; }
@@ -285,8 +271,10 @@ export default function Hero() {
           .hero-item { transition: none !important; }
           .scroll-bounce { animation: none !important; }
         }
+
+        /* On mobile: hide glow layers entirely, save paint + composite budget */
         @media (max-width: 768px) {
-          .parallax-layer { opacity: 0.35; animation: none !important; }
+          .parallax-layer { display: none !important; }
         }
       `}</style>
     </section>
