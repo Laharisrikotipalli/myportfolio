@@ -300,3 +300,23 @@ section { position: relative; z-index: 1; }
   .section-title { font-size: clamp(1.8rem, 7vw, 2.4rem) !important; }
 }
 @media (min-width: 1280px) { .container { max-width: 1200px; } }
+/* ─── PERFORMANCE: content-visibility for off-screen sections ─── */
+/* Tells browser to skip rendering/layout until near viewport */
+#about, #skills, #projects, #experience, #achievements, #contact {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px; /* approximate height prevents CLS */
+}
+
+/* ─── MOBILE PERF: reduce paint cost on small screens ─── */
+@media (max-width: 768px) {
+  /* Reduce box-shadow complexity on mobile */
+  .card, [style*="boxShadow"] {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25) !important;
+  }
+  /* Disable heavy backdrop-filter on mobile */
+  [style*="backdropFilter"], [style*="backdrop-filter"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(6,11,20,0.92) !important;
+  }
+}
