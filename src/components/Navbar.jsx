@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const NAV_LINKS = ['About', 'Skills', 'Projects', 'Resume', 'Contact'];
+const NAV_LINKS = ['About', 'Skills', 'Projects', 'Experience', 'Achievements', 'Contact'];
 
 function SunIcon() {
   return (

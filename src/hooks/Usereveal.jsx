@@ -1,4 +1,4 @@
-// Lightweight IntersectionObserver hook — replaces framer-motion for scroll reveals
+
 // Zero bundle cost, no reflow, GPU-composited (opacity + transform only)
 import { useEffect, useRef } from 'react';
 

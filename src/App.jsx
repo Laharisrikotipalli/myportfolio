@@ -4,12 +4,13 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 
 // Lazy-load below-fold sections
-const About    = lazy(() => import('./components/About'));
-const Skills   = lazy(() => import('./components/Skills'));
-const Projects = lazy(() => import('./components/Projects'));
-const Resume   = lazy(() => import('./components/Resume'));
-const Contact  = lazy(() => import('./components/Contact'));
-const Footer   = lazy(() => import('./components/Footer'));
+const About        = lazy(() => import('./components/About'));
+const Skills       = lazy(() => import('./components/Skills'));
+const Projects     = lazy(() => import('./components/Projects'));
+const Experience   = lazy(() => import('./components/Experience'));
+const Achievements = lazy(() => import('./components/Achievements'));
+const Contact      = lazy(() => import('./components/Contact'));
+const Footer       = lazy(() => import('./components/Footer'));
 
 export default function App() {
   const [theme, setTheme] = useState(() => {
@@ -38,7 +39,8 @@ export default function App() {
           <About />
           <Skills />
           <Projects />
-          <Resume />
+          <Experience />
+          <Achievements />
           <Contact />
         </Suspense>
       </main>
