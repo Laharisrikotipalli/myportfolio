@@ -24,18 +24,20 @@
 
     <title>Lahari Sri Kotipalli — Cloud &amp; Backend Developer</title>
 
-    <!-- Preconnect to fonts -->
+    <!-- DNS prefetch & preconnect for fonts -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Non-blocking font loading -->
+    <!-- Non-blocking font loading with font-display:swap baked in -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" /></noscript>
 
-    <!-- Preload critical image with explicit dimensions hint -->
+    <!-- Preload LCP image — small, optimised webp -->
     <link rel="preload" as="image" href="/profile.webp" type="image/webp" fetchpriority="high" />
 
-    <!-- Critical CSS inlined — ALL above-fold styles here to eliminate render-blocking -->
+    <!-- Critical CSS inlined — eliminates render-blocking -->
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; font-size: 16px; }
@@ -70,10 +72,9 @@
       #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
       [data-theme="light"] #bg-canvas { opacity: 0.55; }
 
-      /* ── Scroll reveal base — GPU-only props ── */
+      /* Scroll reveal — GPU only */
       .reveal {
-        opacity: 0;
-        transform: translateY(28px);
+        opacity: 0; transform: translateY(28px);
         transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
         will-change: opacity, transform;
       }
@@ -113,6 +114,13 @@
       /* Hero items */
       .hero-item { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
       .hero-visible { opacity: 1; transform: translateY(0); }
+
+      /* Reserve LCP image space — prevent CLS */
+      .hero-avatar-wrapper {
+        width: 124px; height: 124px;
+        display: flex; align-items: center; justify-content: center;
+        contain: strict;
+      }
 
       .skip-link {
         position: absolute; top: -999px; left: 1rem; padding: 8px 16px;
