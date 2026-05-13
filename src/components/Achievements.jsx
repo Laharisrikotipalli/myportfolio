@@ -94,10 +94,10 @@ const CiscoIcon = () => (
 );
 
 const APSSDCIcon = () => (
-  <svg viewBox="0 0 48 48" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="24" cy="24" r="22" fill="none" stroke="#FF6B35" strokeWidth="2"/>
-    <text x="24" y="21" fontSize="9" fontWeight="900" fill="#FF6B35" fontFamily="Arial Black" textAnchor="middle">AP</text>
-    <text x="24" y="32" fontSize="6.5" fontWeight="700" fill="#FF6B35" fontFamily="Arial" textAnchor="middle">SSDC</text>
+  <svg viewBox="0 0 80 40" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <rect width="80" height="40" rx="6" fill="#FF6B35"/>
+    <text x="40" y="15" fontSize="9" fontWeight="900" fill="white" fontFamily="Arial Black, Arial" textAnchor="middle" letterSpacing="0.5">APSSDC</text>
+    <text x="40" y="30" fontSize="6" fontWeight="600" fill="rgba(255,255,255,0.85)" fontFamily="Arial" textAnchor="middle" letterSpacing="0.3">INTERNSHIP</text>
   </svg>
 );
 
@@ -136,11 +136,11 @@ const CERTS = [
   },
   {
     icon: <APSSDCIcon />,
-    name: 'AWS Cloud Computing & DevOps Virtual Internship',
+    name: 'Cloud Computing Virtual Internship',
     issuer: 'APSSDC',
     color: '#FF6B35',
     link: 'https://drive.google.com/file/d/1daZzTIgm0kFj8eZq5-oiF781F955kfsf/view?usp=sharing',
-    category: 'DevOps',
+    category: 'Cloud',
   },
 ];
 
