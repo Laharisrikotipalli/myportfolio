@@ -1,9 +1,11 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
-import ParticleCanvas from './components/ParticleCanvas';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 
-// Lazy-load below-fold sections
+// Particle canvas: completely deferred — not critical, hurts mobile TTI
+const ParticleCanvas = lazy(() => import('./components/ParticleCanvas'));
+
+// Lazy-load all below-fold sections
 const About        = lazy(() => import('./components/About'));
 const Skills       = lazy(() => import('./components/Skills'));
 const Projects     = lazy(() => import('./components/Projects'));
@@ -21,6 +23,21 @@ export default function App() {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
 
+  // Defer particle canvas until browser is idle (after LCP)
+  const [showParticles, setShowParticles] = useState(false);
+  useEffect(() => {
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) return; // never show on mobile — saves ~150ms TTI
+    const cb = () => setShowParticles(true);
+    if ('requestIdleCallback' in window) {
+      const id = requestIdleCallback(cb, { timeout: 2000 });
+      return () => cancelIdleCallback(id);
+    } else {
+      const t = setTimeout(cb, 1500);
+      return () => clearTimeout(t);
+    }
+  }, []);
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     document.body.setAttribute('data-theme', theme);
@@ -31,7 +48,11 @@ export default function App() {
 
   return (
     <div data-theme={theme}>
-      <ParticleCanvas theme={theme} />
+      {showParticles && (
+        <Suspense fallback={null}>
+          <ParticleCanvas theme={theme} />
+        </Suspense>
+      )}
       <Navbar theme={theme} toggleTheme={toggleTheme} />
       <main id="main-content" aria-label="Portfolio content">
         <Hero />
