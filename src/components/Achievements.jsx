@@ -89,16 +89,16 @@ const CERTS = [
   },
   {
     icon: <IBMIcon />,
-    name: 'Generative AI Professional Certificate',
-    issuer: 'IBM',
+    name: 'Generative AI in Action',
+    issuer: 'IBM SkillsBuild',
     color: '#1F70C1',
     link: 'https://drive.google.com/file/d/1D5Ooq3p_9naty5a6b3xJXHAyU4I17i3w/view?usp=sharing',
     category: 'AI / ML',
   },
   {
     icon: <OracleIcon />,
-    name: 'Oracle Cloud Infrastructure Associate',
-    issuer: 'Oracle',
+    name: 'Oracle Cloud Infrastructure 2025 Certified Foundations Associate',
+    issuer: 'Oracle Certified',
     color: '#F80000',
     link: 'https://drive.google.com/file/d/12bEzfFwLcKT0hxk7q8F_ijRMYIjmpXsv/view?usp=sharing',
     category: 'Cloud',
@@ -120,7 +120,6 @@ const CERTS = [
     category: 'Cloud',
   },
 ];
-
 const HACKATHONS = [
   {
     icon: '🏆',
