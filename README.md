@@ -1,130 +1,105 @@
-# Lahari Sri Kotipalli — Portfolio
+# Lahari Sri Kotipalli — Developer Portfolio
 
-**Live Site:** https://laharisri.vercel.app
+## Live Website
 
-A modern, production-grade developer portfolio built with React + Vite, showcasing cloud, DevOps, and backend engineering projects with high Lighthouse performance, responsive UI, and smooth animations.
+🌐 [https://laharisri.vercel.app/](https://laharisri.vercel.app/)
 
 ---
 
-## Author
+## About The Project
 
-**Lahari Sri Kotipalli**
-Cloud Architect & DevOps Engineer
-B.Tech CSE — Aditya College of Engineering & Technology (2023–2027)
+This is my personal developer portfolio built using React and Vite to showcase my skills, projects, certifications, technical experience, and resume.
 
-* GitHub: https://github.com/Laharisrikotipalli
-* LinkedIn: https://linkedin.com/in/lahari-sri-kotipalli
-* Portfolio: https://laharisri.vercel.app
+The portfolio is designed with a modern responsive UI, smooth animations, parallax effects, and interactive sections focused on Cloud Computing, DevOps, Full Stack Development, AWS, Kubernetes, and Software Engineering.
 
 ---
 
 ## Features
 
-* Responsive modern portfolio UI
-* Dark / Light theme toggle
-* Animated particle canvas background
-* GPU-optimized parallax effects
-* Smooth scroll reveal animations
-* Optimized Lighthouse performance
-* Mobile responsive layout
-* SEO optimized metadata
-* Resume & certifications section
-* Project showcase with GitHub + Live Demo links
-* FormSubmit contact integration
+* Responsive modern portfolio design
+* Dark themed professional UI
+* Smooth scrolling and reveal animations
+* Interactive particle background
+* Parallax scrolling effects
+* Skills and technologies section
+* Featured projects showcase
+* Resume section
+* Experience and achievements section
+* Certifications display
+* Contact form integration
+* SEO-friendly structure
+* Optimized deployment using Vercel
 
 ---
 
 ## Tech Stack
 
-| Category     | Technologies            |
-| ------------ | ----------------------- |
-| Frontend     | React 18                |
-| Build Tool   | Vite 5                  |
-| Animation    | Framer Motion           |
-| Styling      | CSS3 + CSS Variables    |
-| Icons        | Lucide React            |
-| Deployment   | Vercel                  |
-| Contact Form | FormSubmit              |
-| Performance  | Lighthouse Optimization |
+| Category        | Technologies |
+| --------------- | ------------ |
+| Frontend        | React 18     |
+| Build Tool      | Vite         |
+| Styling         | CSS3         |
+| Icons           | Lucide React |
+| Deployment      | Vercel       |
+| Version Control | Git & GitHub |
 
 ---
 
-## Lighthouse Scores
+## Project Sections
 
-| Category       | Score |
-| -------------- | ----- |
-| Performance    | 98+   |
-| Accessibility  | 95+   |
-| Best Practices | 96+   |
-| SEO            | 100   |
+### Hero Section
 
----
+Introduction, role, and portfolio overview with animated UI.
 
-## Featured Projects
+### About Section
 
-### Docker Image Optimization Analyzer
+Information about education, interests, and technical background.
 
-AI-powered Docker optimization tool reducing image size from 1102MB → 11MB using layer analysis and optimization strategies.
+### Skills Section
 
-### Multi-Layer Cache System
+Displays technologies and tools related to:
 
-Distributed caching architecture using Redis + LRU cache with TTL management and cache stampede protection.
+* AWS
+* Docker
+* Kubernetes
+* Linux
+* DevOps
+* Cloud Computing
+* Frontend Development
+* Backend Development
+* Databases
+* Git & GitHub
 
-### Hybrid Cloud Architecture
+### Projects Section
 
-Terraform-based infrastructure integrating AWS LocalStack, GCP, Docker, and monitoring systems.
+Featured real-world projects related to:
 
-### AWS ECS CI/CD Pipeline
+* Cloud Infrastructure
+* Kubernetes
+* CI/CD Pipelines
+* Docker Optimization
+* Distributed Systems
+* AWS Deployments
 
-Automated deployment pipeline using GitHub Actions, Terraform, Docker, and AWS ECS.
+### Experience & Achievements
 
----
+Highlights certifications, achievements, and technical journey.
 
-## Installation & Development
+### Resume Section
 
-```bash
-# Clone repository
-git clone https://github.com/Laharisrikotipalli/myportfolio.git
+Resume preview and download option.
 
-# Navigate into project
-cd myportfolio
+### Contact Section
 
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-Application runs at:
-
-```bash
-http://localhost:5173
-```
+Allows visitors to connect directly using the contact form.
 
 ---
 
-## Build for Production
-
-```bash
-npm run build
-npm run preview
-```
-
-Production files are generated inside:
-
-```bash
-dist/
-```
-
----
-
-## Project Structure
+## Folder Structure
 
 ```plaintext
-MY-PORTFOLIO/
-├── dist/
-├── node_modules/
+myportfolio/
+│
 ├── public/
 │   ├── cert-gcp-t.png
 │   ├── cert-ibm.png
@@ -132,14 +107,12 @@ MY-PORTFOLIO/
 │   ├── profile.webp
 │   └── robots.txt
 │
-├── reports/
-│   ├── laharisri.vercel.app-desktop.html
-│   └── laharisri.vercel.app-mobile.html
-│
 ├── src/
 │   ├── components/
 │   │   ├── About.jsx
+│   │   ├── Achievements.jsx
 │   │   ├── Contact.jsx
+│   │   ├── Experience.jsx
 │   │   ├── Footer.jsx
 │   │   ├── Hero.jsx
 │   │   ├── Navbar.jsx
@@ -149,76 +122,89 @@ MY-PORTFOLIO/
 │   │   └── Skills.jsx
 │   │
 │   ├── hooks/
+│   │   ├── Useparallax.jsx
+│   │   ├── Usereveal.jsx
+│   │   └── useScrollReveal.js
 │   │
 │   ├── App.jsx
 │   ├── index.css
 │   └── main.jsx
 │
-├── .gitignore
 ├── index.html
-├── package-lock.json
 ├── package.json
-├── README.md
+├── package-lock.json
+├── vite.config.js
 ├── vercel.json
-└── vite.config.js
+└── README.md
+```
+
+---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Laharisrikotipalli/myportfolio.git
+```
+
+Navigate to the project folder:
+
+```bash
+cd myportfolio
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+---
+
+## Production Build
+
+```bash
+npm run build
+```
+
+Preview production build:
+
+```bash
+npm run preview
 ```
 
 ---
 
 ## Deployment
 
-This portfolio is deployed using Vercel.
+The project is deployed using Vercel.
 
-### Deploy on Vercel
+To deploy manually:
 
 ```bash
 npm install -g vercel
 vercel
 ```
 
-Or connect the GitHub repository directly to Vercel for automatic deployments.
+---
+
+## Author
+
+### Lahari Sri Kotipalli
+
+* GitHub: [https://github.com/Laharisrikotipalli](https://github.com/Laharisrikotipalli)
+* LinkedIn: [https://linkedin.com/in/lahari-sri-kotipalli](https://linkedin.com/in/lahari-sri-kotipalli)
+* Portfolio: [https://laharisri.vercel.app/](https://laharisri.vercel.app/)
 
 ---
 
-## Performance Optimizations
+## License
 
-* Lazy-loaded images
-* Optimized Framer Motion animations
-* GPU-accelerated transforms
-* Reduced layout shifts
-* Optimized particle canvas rendering
-* Code splitting with Vite
-* Optimized CSS rendering
-* Minimized reflows and repaints
-
----
-
-## Reports
-
-Lighthouse reports are included inside:
-
-```plaintext
-reports/
-```
-
-These reports contain:
-
-* Mobile Lighthouse Audit
-* Desktop Lighthouse Audit
-* Performance analysis
-* SEO analysis
-* Accessibility analysis
-
----
-
-## Contact
-
-**Lahari Sri Kotipalli**
-
-* GitHub: https://github.com/Laharisrikotipalli
-* LinkedIn: https://linkedin.com/in/lahari-sri-kotipalli
-* Portfolio: https://laharisri.vercel.app
-
----
-
-Built with React + Vite + Framer Motion
+This project is open source and available for learning and personal inspiration.
