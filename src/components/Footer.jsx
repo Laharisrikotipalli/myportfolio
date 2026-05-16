@@ -42,7 +42,7 @@ export default function Footer() {
               Lahari Sri Kotipalli
             </div>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.72rem', color: 'var(--text3)' }}>
-              Cloud &amp; Backend Developer · B.Tech CSE '27
+              Cloud &amp; DevOps Engineer · B.Tech CSE '27
             </div>
           </div>
 
